@@ -7,7 +7,7 @@ use 5.008_001;
 
 use Scalar::Util qw();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub GC_FACTOR () { 10 }
 
@@ -25,6 +25,10 @@ sub set {
     my ($self, $key, $value) = @_;
 
     my $entries = $self->{_entries};
+
+    if (my $old_value_ref = $entries->{$key}) {
+        $$old_value_ref = undef;
+    }
 
     # register
     my $value_ref = \$value;
@@ -44,7 +48,10 @@ sub set {
 sub remove {
     my ($self, $key) = @_;
     my $value_ref = delete $self->{_entries}->{$key};
-    $value_ref && $$value_ref;
+    return undef unless $value_ref;
+    my $value = $$value_ref;
+    $$value_ref = undef;
+    $value;
 }
 
 sub get {
