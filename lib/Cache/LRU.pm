@@ -7,7 +7,7 @@ use 5.008_001;
 
 use Scalar::Util qw();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub GC_FACTOR () { 10 }
 
@@ -76,7 +76,7 @@ sub _update_fifo {
         my %need = map { $_ => 1 } keys %$entries;
         while (%need) {
             my $fifo_entry = pop @$fifo;
-            push @new_fifo, $fifo_entry
+            unshift @new_fifo, $fifo_entry
                 if delete $need{$fifo_entry->[0]};
         }
         $self->{_fifo} = \@new_fifo;
@@ -104,9 +104,39 @@ Cache::LRU - a simple, fast implementation of LRU cache in pure perl
 
     $removed_value = $cache->remove($key);
 
+=head1 DESCRIPTION
+
+Cache::LRU is a simple, fast implementation of an in-memory LRU cache in pure perl.
+
+=head1 FUNCTIONS
+
+=head2 Cache::LRU->new(size => $max_num_of_entries)
+
+Creates a new cache object.  Takes a hash as the only argument.  The only parameter currently recognized is the C<size> parameter that specifies the maximum number of entries to be stored within the cache object.
+
+=head2 $cache->get($key)
+
+Returns the cached object if exists, or undef otherwise.
+
+=head2 $cache->set($key => $value)
+
+Stores the given key-value pair.
+
+=head2 $cache->remove($key)
+
+Removes data associated to the given key and returns the old value, if any.
+
 =head1 AUTHOR
 
 Kazuho Oku
+
+=head1 SEE ALSO
+
+L<Cache>
+
+L<Cache::Ref>
+
+L<Tie::Cache::LRU>
 
 =head1 LICENSE
 
