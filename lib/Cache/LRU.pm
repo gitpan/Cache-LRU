@@ -7,7 +7,7 @@ use 5.008_001;
 
 use Scalar::Util qw();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub GC_FACTOR () { 10 }
 
@@ -62,6 +62,13 @@ sub get {
 
     $self->_update_fifo($key, $value_ref);
     $$value_ref;
+}
+
+sub clear {
+    my $self = shift;
+
+    $self->{_entries} = {};
+    $self->{_fifo} = [];    
 }
 
 sub _update_fifo {
@@ -125,6 +132,10 @@ Stores the given key-value pair.
 =head2 $cache->remove($key)
 
 Removes data associated to the given key and returns the old value, if any.
+
+=head2 $cache->clear($key)
+
+Removes all entries from the cache.
 
 =head1 AUTHOR
 

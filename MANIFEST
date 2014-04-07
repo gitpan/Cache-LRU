@@ -16,3 +16,4 @@ MANIFEST			This list of files
 META.yml
 README
 t/00base.t
+t/01destroy.t
